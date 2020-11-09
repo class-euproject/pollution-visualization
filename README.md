@@ -11,10 +11,35 @@ This application is a dashboard showing the pollution in the [MASA](https://www.
 
 ## Requirements
 
-To execute this application is required to have:
-* R version 3.6.3
+
+**THIS PROCESS WAS DONE ON An UBUNTU 18.04.5 LTS**
+
+To execute this application is required to diferents library and R packages:
+* R version 3.6.3 or superior
 * R package [mapview](https://r-spatial.github.io/mapview/) 2.9.0
 * R package [shiny](https://shiny.rstudio.com/) 1.5.0
+
+```console
+sudo apt install -y libssl-dev \
+                    libcurl4-openssl-dev \
+                    libudunits2-dev \
+                    gdal-bin \
+                    libgdal-dev \
+                    libcairo2-dev \
+                    libfontconfig1-dev \
+                    libproj-dev \
+                    libgeos-dev
+```
+
+```R
+install.packages("devtools")
+devtools::install_github("hadley/devtools")
+install.packages("leaftlet")
+install.packages("dplyr")
+install.packages("mapview")
+install.packages("shiny")
+```
+
 
 
 ## Usage
@@ -23,3 +48,4 @@ To run the application run the R dashboard-Modena.r script as a background job.
 
 Once the dashboard is running it will show a window with the dashboard, it will show the data saved in stream.csv inside the Data folder 
 In order to simulate that the dashboard receives new data by running lanzador.r, this script will rewrite stream.csv periodically, such changes will be detected by the dashboard which will be updated automatically.
+

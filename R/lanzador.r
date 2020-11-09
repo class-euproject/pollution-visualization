@@ -8,6 +8,5 @@ for (i in 1:length(temp)){
 
   write.csv(data, "./Data/stream.csv")
   Sys.sleep(3)
-
 }
 
