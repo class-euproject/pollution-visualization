@@ -1,5 +1,5 @@
 FROM rocker/shiny
-
+# Download and install library
 RUN apt-get update &&\
     sudo apt install -y libssl-dev \
                         libcurl4-openssl-dev \
@@ -9,18 +9,21 @@ RUN apt-get update &&\
                         libcairo2-dev \
                         libfontconfig1-dev \
                         libproj-dev \
+                        git \
                         libgeos-dev &&\
     mkdir -p /var/lib/shiny-server/bookmarks/shiny
 
-# Download and install library
+# Download and install packages
 
 RUN R -e "install.packages('devtools')"
 RUN R -e "devtools::install_github('hadley/devtools')"
 RUN R -e "install.packages('leaftlet')"
 RUN R -e "install.packages('dplyr')"
 RUN R -e "install.packages('mapview')"
-RUN R -e "install.packages('leaftlet')"
-RUN R -e "install.packages('leaftlet')"
 RUN R -e "install.packages('shiny')"
+RUN R -e "remotes::install_github("r-spatial/mapview")"
 RUN R -e "install.packages(c('shinydashboard', 'shinyjs', 'V8'))"
+RUN git clone https://github.com/class-euproject/pollution-visualization /root
+WORKDIR /root/pollution-visualization
+CMD ["Rscript","Rscript R/dashboard-Modena.r"]
 
