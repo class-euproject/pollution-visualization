@@ -1,5 +1,3 @@
-
-
 temp = list.files(path = "./Data", pattern="^results",full.names = TRUE)
 for (i in 1:length(temp)){
   print(temp[i])
@@ -9,5 +7,3 @@ for (i in 1:length(temp)){
   write.csv(data, "./Data/stream.csv")
   Sys.sleep(3)
 }
-
-
