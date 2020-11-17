@@ -7,12 +7,12 @@ library(leaflet)
 options(shiny.port = 8888)
 mapviewOptions(default = TRUE)
 
-streamfile <- paste( getwd(), "/../Data/stream.csv", sep = "", collapse = NULL)
+streamfile <- paste( getwd(), "../Data/stream.csv", sep = "", collapse = NULL)
 
 map_image_web <- paste( getwd(), "/Images/map.html", sep = "", collapse = NULL)
 map_image_png <- paste( getwd(), "/Images/map.png", sep = "", collapse = NULL)
 
-city_roads <-st_read("/../Data/modena_roads.csv")
+city_roads <-st_read("../Data/modena_roads.csv")
 city_roads$WKT <- NULL
 
 menu_selector <- c("LinkID","Speed_av","NOx","HC","CO","PM","PN" ,"NO")
