@@ -7,7 +7,7 @@ library(leaflet)
 options(shiny.port = 8888)
 mapviewOptions(default = TRUE)
 
-streamfile <- paste( getwd(), "../Data/stream.csv", sep = "", collapse = NULL)
+streamfile <- paste( getwd(), "/../Data/stream.csv", sep = "", collapse = NULL)
 
 map_image_web <- paste( getwd(), "/Images/map.html", sep = "", collapse = NULL)
 map_image_png <- paste( getwd(), "/Images/map.png", sep = "", collapse = NULL)
@@ -71,12 +71,12 @@ server <- function(input, output) {
     zcolValue <- zcolumn()
 
     #generate a map
-    mapviewOptions(basemaps = c("OpenStreetMap"), vector.palette =  colorRampPalette(c("dark blue","blue","cyan","springgreen","olivedrab1","orange","orangered","red")))
+    mapviewOptions(basemaps = c("OpenStreetMap"), vector.palette =  colorRampPalette(c("dark blue", "blue", "cyan", "springgreen", "olivedrab1", "orange", "orangered", "red")))
     mapview(f, zcol = menu_selector[zcolValue], layer.name = menu_title[zcolValue], at = c(-Inf, 0.2, 0.5, 1.0, 5.0, 10.0, 20.0, 50.0, Inf), zoom = 15, legend = TRUE, lwd = 5)@map
-    # mapshot(map_result,url = map_image_web, file = map_image_png)
   })
 }
 
 # Run the application
 app <- shinyApp(ui = ui, server = server)
 runApp(app, host ="0.0.0.0", port = 8888, launch.browser = FALSE)
+
