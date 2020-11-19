@@ -21,9 +21,9 @@ RUN R -e "install.packages('leaftlet')"
 RUN R -e "install.packages('dplyr')"
 RUN R -e "install.packages('mapview')"
 RUN R -e "install.packages('shiny')"
-RUN R -e "remotes::install_github("r-spatial/mapview")"
+RUN R -e "remotes::install_github('r-spatial/mapview')"
 RUN R -e "install.packages(c('shinydashboard', 'shinyjs', 'V8'))"
-RUN git clone https://github.com/class-euproject/pollution-visualization /root
-WORKDIR /root/pollution-visualization
-CMD ["Rscript","Rscript R/dashboard-Modena.r"]
+RUN cd /root && git clone https://github.com/class-euproject/pollution-visualization
+WORKDIR /root/pollution-visualization/R
+CMD ["Rscript","dashboard-Modena.r"]
 
