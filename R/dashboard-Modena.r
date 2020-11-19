@@ -18,6 +18,10 @@ city_roads$WKT <- NULL
 menu_selector <- c("LinkID","Speed_av","NOx","HC","CO","PM","PN" ,"NO")
 menu_title <- c("Roads","Speed (km/h)","NOx (kg/h)","HC (kg/h)", "CO (kg/h)","PM (kg/h)","PN (kg/h)","NO (kg/h)")
 
+legendLabel =  c("< 0.2", "0,2 - 0.5","0.5 - 1.0","1.0 - 5.0","5.0 - 10.0", "10.0 - 20.0","20.0 - 50.0","> 50")
+legendAt = c(-Inf, 0.2, 0.5, 1.0, 5.0, 10.0, 20.0, 50.0, Inf)
+colourPalete = c("#00008b", "blue", "cyan", "springgreen", "#b0ec41", "orange", "orangered", "red")
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -71,8 +75,8 @@ server <- function(input, output) {
     zcolValue <- zcolumn()
 
     #generate a map
-    mapviewOptions(basemaps = c("OpenStreetMap"), vector.palette =  colorRampPalette(c("dark blue", "blue", "cyan", "springgreen", "olivedrab1", "orange", "orangered", "red")))
-    mapview(f, zcol = menu_selector[zcolValue], layer.name = menu_title[zcolValue], at = c(-Inf, 0.2, 0.5, 1.0, 5.0, 10.0, 20.0, 50.0, Inf), zoom = 15, legend = TRUE, lwd = 5)@map
+    mapviewOptions(basemaps = c("OpenStreetMap"), vector.palette =  colorRampPalette(colourPalete))
+    mapview(f, zcol = menu_selector[zcolValue], layer.name = menu_title[zcolValue], at = legendAt, zoom = 15, legend = FALSE, lwd = 5)@map %>% addLegend("topleft", colors = colourPalete, labels = legendLabel, title = menu_title[zcolValue], opacity = 1)
   })
 }
 
