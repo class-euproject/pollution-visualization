@@ -3,6 +3,7 @@ library(sf)
 library(mapview)
 library(dplyr)
 library(leaflet)
+library(units)
 
 options(shiny.port = 8888)
 mapviewOptions(default = TRUE)
@@ -12,11 +13,11 @@ streamfile <- paste( getwd(), "/../Data/stream.csv", sep = "", collapse = NULL)
 map_image_web <- paste( getwd(), "/Images/map.html", sep = "", collapse = NULL)
 map_image_png <- paste( getwd(), "/Images/map.png", sep = "", collapse = NULL)
 
-city_roads <-st_read("../Data/modena_roads.csv")
+city_roads <-st_read("../Data/test_roads.csv")
 city_roads$WKT <- NULL
 
-menu_selector <- c("LinkID","Speed_av","NOx","HC","CO","PM","PN" ,"NO")
-menu_title <- c("Roads","Speed (km/h)","NOx (kg/h)","HC (kg/h)", "CO (kg/h)","PM (kg/h)","PN (kg/h)","NO (kg/h)")
+column_names <- c("LinkID","Speed_av","NOx","HC","CO","PM","PN","NO")
+menu_title <- c("Roads","Speed (m/s)","NOx (kg/h)","HC (kg/h)", "CO (kg/h)","PM (kg/h)","PN (kg/h)","NO (kg/h)")
 
 legendLabel =  c("< 0.2", "0,2 - 0.5","0.5 - 1.0","1.0 - 5.0","5.0 - 10.0", "10.0 - 20.0","20.0 - 50.0","> 50")
 legendAt = c(-Inf, 0.2, 0.5, 1.0, 5.0, 10.0, 20.0, 50.0, Inf)
@@ -32,8 +33,8 @@ ui <- fluidPage(
   sidebarLayout(position = "right",
     sidebarPanel(
       selectInput("gasType", "Gas type",
-                  choices = menu_selector[1:8],
-                  selected = menu_selector[2]
+                  choices = column_names[1:8],
+                  selected = column_names[3]
       ),
       width = 2
 
@@ -54,8 +55,9 @@ server <- function(input, output) {
     vehicle_data <- reader()
     clean_data <- vehicle_data %>% select("LinkID","link_speed_av","NOx","HC","CO","PM","PN","NO")
     mean_data <- aggregate( clean_data[, 2:8], list(clean_data$LinkID), mean)
-    colnames(mean_data) <- c("LinkID", "Speed_av","NOx", "HC","CO", "PM" ,"PN" ,"NO")
+    colnames(mean_data) <- column_names
     dataframe <- merge(mean_data, city_roads, by="LinkID")
+    dataframe["Speed_av"] <- dataframe["Speed_av"]*3.6
     geodataframe <-st_sf(dataframe, crs="EPSG:4326")
     f <-geodataframe
     f
@@ -63,7 +65,7 @@ server <- function(input, output) {
 
   zcolumn <- reactive({
     value <- NULL
-    if(input$gasType != "All")  value <-which(menu_selector== input$gasType)
+    if(input$gasType != "All")  value <-which(column_names== input$gasType)
     value
   })
 
@@ -76,7 +78,7 @@ server <- function(input, output) {
 
     #generate a map
     mapviewOptions(basemaps = c("OpenStreetMap"), vector.palette =  colorRampPalette(colourPalete))
-    mapview(f, zcol = menu_selector[zcolValue], layer.name = menu_title[zcolValue], at = legendAt, zoom = 15, legend = FALSE, lwd = 5)@map %>% addLegend("topleft", colors = colourPalete, labels = legendLabel, title = menu_title[zcolValue], opacity = 1)
+    mapview(f, zcol = column_names[zcolValue], layer.name = menu_title[zcolValue], at = legendAt, zoom = 15, legend = FALSE, lwd = 5)@map %>% addLegend("topleft", colors = colourPalete, labels = legendLabel, title = menu_title[zcolValue], opacity = 1)
   })
 }
 
