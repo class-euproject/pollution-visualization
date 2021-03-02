@@ -81,7 +81,7 @@ road_montalcini <- st_multilinestring(list(rbind(c(10.931728,44.655004),c(10.934
 The next line creates the column **geometry**. This column is used to paint correctly on the map.
 
 ```R
-# modena_roads <- st_sfc(road_attiraglio2,road_canaletto2, crs="EPSG:4326")
+modena_roads <- st_sfc(road_attiraglio2,road_canaletto2, crs="EPSG:4326")
 ```
 
 To associate the LinkID with the street it would be with the following command that would create a dataframe
