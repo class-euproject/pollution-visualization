@@ -4,17 +4,21 @@ library(mapview)
 library(dplyr)
 library(leaflet)
 library(units)
+library(readr)
+
 
 options(shiny.port = 8888)
 mapviewOptions(default = TRUE)
 
 streamfile <- paste( getwd(), "/../Data/stream.csv", sep = "", collapse = NULL)
 
-map_image_web <- paste( getwd(), "/Images/map.html", sep = "", collapse = NULL)
-map_image_png <- paste( getwd(), "/Images/map.png", sep = "", collapse = NULL)
+map_image_web <- paste( getwd(), "../Images/map.html", sep = "", collapse = NULL)
+map_image_png <- paste( getwd(), "../Images/map.png", sep = "", collapse = NULL)
 
 city_roads <-st_read("../Data/test_roads.csv")
 city_roads$WKT <- NULL
+
+linkID_group <- read_csv(paste0( getwd(), "/../Data/linkID_group.csv"))
 
 column_names <- c("LinkID","Speed_av","NOx","HC","CO","PM","PN","NO")
 menu_title <- c("Roads","Speed (m/s)","NOx (kg/h)","HC (kg/h)", "CO (kg/h)","PM (kg/h)","PN (kg/h)","NO (kg/h)")
@@ -56,7 +60,9 @@ server <- function(input, output) {
     clean_data <- vehicle_data %>% select("LinkID","link_speed_av","NOx","HC","CO","PM","PN","NO")
     mean_data <- aggregate( clean_data[, 2:8], list(clean_data$LinkID), mean)
     colnames(mean_data) <- column_names
-    dataframe <- merge(mean_data, city_roads, by="LinkID")
+    mean_data <- merge(mean_data, linkID_group, by="LinkID",all.x = TRUE)
+    mean_data <- mean_data %>% rowwise() %>% mutate(LinkID_group = ifelse(is.na(LinkID_group),toString(LinkID),LinkID_group))
+    dataframe <- merge(mean_data, city_roads, by="LinkID_group")
     dataframe["Speed_av"] <- dataframe["Speed_av"]*3.6
     geodataframe <-st_sf(dataframe, crs="EPSG:4326")
     f <-geodataframe
