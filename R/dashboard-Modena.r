@@ -62,6 +62,8 @@ server <- function(input, output) {
     colnames(mean_data) <- column_names
     mean_data <- merge(mean_data, linkID_group, by="LinkID",all.x = TRUE)
     mean_data <- mean_data %>% rowwise() %>% mutate(LinkID_group = ifelse(is.na(LinkID_group),toString(LinkID),LinkID_group))
+    mean_data <- aggregate( mean_data[, 2:8], list(clean_data$LinkID_group), sum)
+
     dataframe <- merge(mean_data, city_roads, by="LinkID_group")
     dataframe["Speed_av"] <- dataframe["Speed_av"]*3.6
     geodataframe <-st_sf(dataframe, crs="EPSG:4326")
