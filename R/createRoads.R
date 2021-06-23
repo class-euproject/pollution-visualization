@@ -10,17 +10,17 @@ aux_3 <- st_linestring(rbind(rev(c(44.655154, 10.934567)), rev(c(44.655360, 10.9
 cam_20936 <- st_multilinestring(list(aux_1, aux_2, aux_3))
 
 
-cam_6310_634 <- st_linestring(rbind(rev(c( 44.656866, 10.929196)) , rev(c(44.656511, 10.929003)), 
+cam_634 <- st_linestring(rbind(rev(c( 44.656866, 10.929196)) , rev(c(44.656511, 10.929003)), 
                                     rev(c(44.656290, 10.929142)), rev(c(44.656168, 10.928868)), 
                                     rev(c(44.656290, 10.928594)), rev(c(44.656511, 10.929003))))
 aux_1 <- st_linestring(rbind(rev(c(44.656044, 10.928245)), rev(c(44.656254, 10.928428))))
 aux_2 <- st_linestring(rbind(rev(c(44.656222, 10.928120)), rev(c(44.656254, 10.928428))))
 aux_3 <- st_linestring(rbind(rev(c(44.656222, 10.928120)),  rev(c(44.656290, 10.928594))))
-cam_6310_634 <- st_multilinestring(list(cam_634,aux_1,aux_2,aux_3))
+cam_6310 <- st_multilinestring(list(aux_1,aux_2,aux_3))
 
 
-modena_roads <- st_sfc(list(cam_20937,cam_20939,cam_20936,cam_6310_634), crs="EPSG:4326")
+modena_roads <- st_sfc(list(cam_20937,cam_20939,cam_20936,cam_634,cam_6310), crs="EPSG:4326")
 
-d = st_sf(data.frame(LinkID_group=c("20937", "20939", "20936","6310_634"), geom=modena_roads))
+d = st_sf(data.frame(LinkID_group=c("20937", "20939", "20936","634","6310"), geom=modena_roads))
 
 st_write(d, paste0(getwd(), "/../Data/test_roads.csv"), driver = "CSV", layer_options = "GEOMETRY=AS_WKT",append=FALSE)

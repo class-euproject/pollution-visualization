@@ -10,7 +10,7 @@ library(readr)
 options(shiny.port = 8888)
 mapviewOptions(default = TRUE)
 
-streamfile <- paste( getwd(), "/../Data/stream.csv", sep = "", collapse = NULL)
+streamfile <- paste( getwd(), "/../../phemlight-r/out/stream.csv", sep = "", collapse = NULL)
 
 map_image_web <- paste( getwd(), "../Images/map.html", sep = "", collapse = NULL)
 map_image_png <- paste( getwd(), "../Images/map.png", sep = "", collapse = NULL)
@@ -62,7 +62,7 @@ server <- function(input, output) {
     colnames(mean_data) <- column_names
     mean_data <- merge(mean_data, linkID_group, by="LinkID",all.x = TRUE)
     mean_data <- mean_data %>% rowwise() %>% mutate(LinkID_group = ifelse(is.na(LinkID_group),toString(LinkID),LinkID_group))
-    mean_data <- aggregate( mean_data[, 2:8], list(clean_data$LinkID_group), sum)
+    #mean_data <- aggregate( mean_data[, 2:8], list(clean_data$LinkID_group), sum)
 
     dataframe <- merge(mean_data, city_roads, by="LinkID_group")
     dataframe["Speed_av"] <- dataframe["Speed_av"]*3.6
