@@ -23,4 +23,5 @@ modena_roads <- st_sfc(list(cam_20937,cam_20939,cam_20936,cam_634,cam_6310), crs
 
 d = st_sf(data.frame(LinkID_group=c("20937", "20939", "20936","634","6310"), geom=modena_roads))
 
+#--TODO: eliminar antes de crear, el append no funciona
 st_write(d, paste0(getwd(), "/../Data/test_roads.csv"), driver = "CSV", layer_options = "GEOMETRY=AS_WKT",append=FALSE)
