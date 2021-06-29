@@ -1,6 +1,5 @@
 library(shiny)
 library(sf)
-library(mapview)
 library(dplyr)
 library(leaflet)
 library(units)
@@ -14,12 +13,12 @@ palfunc <- function (n, alpha = 1, begin = 0, end = 1, direction = 1)
   colorRampPalette(colors, alpha = alpha)(n)
 }
 
-pal <- colorNumeric(palette = rev(RColorBrewer::brewer.pal(15, "RdYlGn")), domain = c(0:8))
+pal <- colorNumeric(palette = rev(RColorBrewer::brewer.pal(11, "RdYlGn")), domain = c(0:8))
 
 options(shiny.port = 8888)
-mapviewOptions(default = TRUE)
+#mapviewOptions(default = TRUE)
 
-streamfile <- paste( getwd(), "/../../phemlight-r/out/stream.csv", sep = "", collapse = NULL)
+streamfile <- paste( getwd(), "/../../phemlight/out/stream.csv", sep = "", collapse = NULL)
 
 map_image_web <- paste( getwd(), "../Images/map.html", sep = "", collapse = NULL)
 map_image_png <- paste( getwd(), "../Images/map.png", sep = "", collapse = NULL)
@@ -57,9 +56,7 @@ ui <- fluidPage(
 
     ),
     # Show a plot of the generated distribution
-    mainPanel(
-      mapviewOutput("mapPlot"),
-      width = 10)
+    leafletOutput("mapPlot")
   )
 )
 # Define server logic required to draw a histogram
@@ -72,7 +69,7 @@ server <- function(input, output) {
     vehicle_data <- reader()
     clean_data <- vehicle_data %>% select("LinkID","link_speed_av","NOx","HC","CO","PM","PN","NO")
     clean_data
-    mean_data <- aggregate( clean_data[, 2:8], list(clean_data$LinkID), mean)
+    mean_data <- aggregate( clean_data[, 2:8], list(clean_data$LinkID), sum)
     colnames(mean_data) <- column_names
     mean_data <- merge(mean_data, linkID_group, by="LinkID",all.x = TRUE)
     mean_data <- mean_data %>% rowwise() %>% mutate(LinkID_group = ifelse(is.na(LinkID_group),toString(LinkID),LinkID_group))
